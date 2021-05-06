@@ -34,11 +34,11 @@ export class AppComponent implements OnInit {
 
   public selects: FormGroup[] = []; // lista de partes de los selects
   public selectForm: FormGroup = new FormGroup({}); //nombre asignado al formulario de select
+  public insertForm: FormGroup = new FormGroup({}); //nombre asignado al formulario de insert
   public selectIndice = 0; //permite contar las s1tructuras agregadas dinamicamente
   public resultado = ''; // resultado de los selects
   public showJoin = false;
   public showWhere = false;
-
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -50,6 +50,14 @@ export class AppComponent implements OnInit {
       ['Tabla' + this.selectIndice]: new FormControl('', [Validators.required]),
     });
     this.selects.push(this.selectForm);
+
+    this.insertForm = new FormGroup({
+      ['Tabla']: new FormControl('', [Validators.required]),
+      ['Columnas']: new FormControl('', [
+        Validators.required,
+      ]),
+      ['Valores']: new FormControl('', [Validators.required]),
+    });
   }
 
   setSeccion(sen: number) {
@@ -77,11 +85,16 @@ export class AppComponent implements OnInit {
   }
 
   onClick(index: number) {
-    if (this.selects[index].value['Columnas' + index] != this.selectForm.value['Columnas' + index] ||
-      this.selects[index].value['Tabla' + index] != this.selectForm.value['Tabla' + index]) {
-      if (this.selects[index].value['Columnas' + index] != '' ||
-        this.selects[index].value['Tabla' + index] != '') 
-      {
+    if (
+      this.selects[index].value['Columnas' + index] !=
+        this.selectForm.value['Columnas' + index] ||
+      this.selects[index].value['Tabla' + index] !=
+        this.selectForm.value['Tabla' + index]
+    ) {
+      if (
+        this.selects[index].value['Columnas' + index] != '' ||
+        this.selects[index].value['Tabla' + index] != ''
+      ) {
         this.selectForm = this.formBuilder.group({
           ['Columnas' + index]: new FormControl(
             this.selects[index].value['Columnas' + index],
@@ -98,8 +111,10 @@ export class AppComponent implements OnInit {
   }
 
   onChange(index: number) {
-    if (this.selects[index].value['Columnas' + index] != '' ||
-      this.selects[index].value['Tabla' + index] != '')
+    if (
+      this.selects[index].value['Columnas' + index] != '' ||
+      this.selects[index].value['Tabla' + index] != ''
+    )
       this.selectForm = this.formBuilder.group({
         ['Columnas' + index]: new FormControl(
           this.selects[index].value['Columnas' + index],
@@ -113,36 +128,64 @@ export class AppComponent implements OnInit {
     this.selects[index] = this.selectForm;
   }
 
+  onChangeInsert() {
+    if (
+      this.insertForm.value['Columnas'] != '' ||
+      this.insertForm.value['Tabla'] != ''
+    )
+      this.insertForm = this.formBuilder.group({
+        ['Tabla']: new FormControl(
+          this.insertForm.value['Tabla'],
+          [Validators.required]
+        ),
+        ['Columnas']: new FormControl(
+          this.insertForm.value['Columnas']
+        ),
+        ['Valores']: new FormControl(
+          this.insertForm.value['Valores'],
+          [Validators.required]
+        ),
+      });
+  }
+
   onSubmit() {
     if (this.secciones == 1) {
       this.resultado = 'Select ';
       this.selects.forEach((select, index) => {
         if (this.selects.length == 1) {
-          this.resultado =
-            this.resultado + select.value['Columnas' + index] + '\n';
+          this.resultado+= select.value['Columnas' + index] + '\n';
         }
         if (this.selects.length >= 1 && index < this.selects.length - 1) {
-          this.resultado =
-            this.resultado + select.value['Columnas' + index] + ',';
+          this.resultado+= select.value['Columnas' + index] + ',';
         }
         if (this.selects.length > 1 && index == this.selects.length - 1) {
-          this.resultado =
-            this.resultado + select.value['Columnas' + index] + '\n';
+          this.resultado+= select.value['Columnas' + index] + '\n';
         }
       });
       this.resultado = this.resultado + 'From ';
       this.selects.forEach((select, index) => {
         if (this.selects.length == 1) {
-          this.resultado = this.resultado + select.value['Tabla' + index] + ';';
+          this.resultado+= select.value['Tabla' + index] + ';';
         }
         if (this.selects.length >= 1 && index < this.selects.length - 1) {
-          this.resultado = this.resultado + select.value['Tabla' + index] + ',';
+          this.resultado+= select.value['Tabla' + index] + ',';
         }
         if (this.selects.length > 1 && index == this.selects.length - 1) {
-          this.resultado = this.resultado + select.value['Tabla' + index] + ';';
+          this.resultado+=select.value['Tabla' + index] + ';';
         }
       });
     } else if (this.secciones == 2) {
+      this.resultado = 'Insert into ';
+      this.resultado+= this.insertForm.value['Tabla'];
+      if(this.insertForm.value['Columnas']!=''){
+        this.resultado+= ' ('+this.insertForm.value['Columnas']+')';
+      }
+      this.resultado+='\n';
+      this.resultado+= ' values('+this.insertForm.value['Valores']+')';
+    } else if (this.secciones == 3) {
+      this.resultado = 'Update ';
+    } else if (this.secciones == 3) {
+      this.resultado = 'Delete ';
     }
   }
 

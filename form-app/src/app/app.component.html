@@ -151,7 +151,38 @@
 
       <!-- Insert Section-->
       <div *ngIf="secciones == 2">
-        <p>seccion2</p>
+        <form [formGroup]="insertForm" (ngSubmit)="onSubmit()">
+          <div class="row mt-3">
+            <div class="col-md-2 col-sm-4">
+              <h5>INTO TABLE:*</h5>
+            </div>
+            <div class="col-md-3 col-sm-8">
+              <input type="text" formControlName="Tabla" placeholder="Ejemplo: mytable" (change)="onChangeInsert()"
+                class="form-control">
+            </div>
+            <div class="col-md-2 col-sm-4">
+              <h5>Column Names:</h5>
+            </div>
+            <div class="col-md-3 col-sm-8">
+              <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..." (change)="onChangeInsert()"
+                class="form-control">
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-2 col-sm-4">
+              <h5>Values:*</h5>
+            </div>
+            <div class="col-md-3 col-sm-8">
+              <input type="text" formControlName="Valores" placeholder="Ejemplo: Valor1,Valor2,..." (change)="onChangeInsert()"
+                class="form-control">
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-ms-12 text-center">
+              <button type="submit" [disabled]="insertForm.invalid" class="btn btn-primary">Generar Código</button>
+            </div>
+          </div>
+        </form>
       </div>
       <!-- End Insert Section-->
 
