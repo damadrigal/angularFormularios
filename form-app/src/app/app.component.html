@@ -9,7 +9,8 @@
         </div>
         <div class="col-md-3 col-sm-8">
           <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {{sentencia}}
             </button>
             <div class="dropdown-menu">
@@ -22,7 +23,8 @@
           </div>
         </div>
       </div>
-  
+
+      <!-- Select Section-->
       <div *ngIf="secciones == 1">
         <form [formGroup]="selectForm" (ngSubmit)="onSubmit()">
           <div class="row mt-3" *ngFor="let sel of selects; let i = index">
@@ -58,17 +60,19 @@
             </div>
           </div>
           <div class="mt-3">
-            <button type="button" class="btn btn-success"
-              >ADD JOIN</button>
+            <button type="button" class="btn btn-success" (click)="showJoin=!showJoin">ADD JOIN</button>
           </div>
-          <div class="container">
-            <div class="row  mt-3">
+
+          <!-- Join Secction -->
+          <div class="container border m-3 pb-3" *ngIf="showJoin">
+            <div class="row mt-3">
               <div class="col-md-2 col-sm-4">
                 <h5>Join Type:</h5>
               </div>
               <div class="col-md-3 col-sm-8">
                 <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{joinSeleccionado}}
                   </button>
                   <div class="dropdown-menu">
@@ -80,12 +84,62 @@
                   </div>
                 </div>
               </div>
-            </div>           
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-2 col-sm-4">
+                <h5>Tabla 1:</h5>
+              </div>
+              <div class="col-md-2 col-sm-8">
+                <input type="text" placeholder="Ejemplo: miTabla" class="form-control">
+              </div>
+              <div class="col-md-3 col-sm-8">
+                <input type="text" placeholder="Ejemplo: Columna1,Columna2,..." class="form-control">
+              </div>
+              <div class="col-md-1 col-sm-12">
+                <h5>ON</h5>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-2 col-sm-4">
+                <h5>Tabla 2:</h5>
+              </div>
+              <div class="col-md-2 col-sm-8">
+                <input type="text" placeholder="Ejemplo: miTabla" class="form-control">
+              </div>
+              <div class="col-md-2 col-sm-4">
+                <h5>Columna 2:</h5>
+              </div>
+              <div class="col-md-3 col-sm-8">
+                <input type="text" placeholder="Ejemplo: Columna1,Columna2,..." class="form-control">
+              </div>
+              <div class="col-md-2 col-sm-12">
+                <div class="row">
+                  <div class="col-md-6 col-sm-12">
+                    <button type="button" class="btn btn-success" [disabled]="selectForm.invalid">Agregar</button>
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <button type="button" class="btn btn-danger">Eliminar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+          <!-- End Join Secction -->
           <div class="mt-3">
-            <button type="button" class="btn btn-success"
-              >ADD WHERE</button>
+            <button type="button" class="btn btn-success" (click)="showWhere=!showWhere">ADD WHERE</button>
           </div>
+           <!-- Where Secction -->
+          <div class="container border m-3 pb-3" *ngIf="showWhere">
+            <div class="row mt-3">
+              <div class="col-md-2 col-sm-4">
+                <h5>Where</h5>
+              </div>
+              <div class="col-md-6 col-sm-8">
+                <input type="text" placeholder="Ejemplo: where clause" class="form-control">
+              </div>
+            </div>
+          </div>
+          <!-- End Where Secction -->
           <div class="row mt-5">
             <div class="col-ms-12 text-center">
               <button type="submit" [disabled]="selectForm.invalid" class="btn btn-primary">Generar Código</button>
@@ -93,18 +147,28 @@
           </div>
         </form>
       </div>
+      <!-- EndSelect Section-->
+
+      <!-- Insert Section-->
       <div *ngIf="secciones == 2">
         <p>seccion2</p>
       </div>
+      <!-- End Insert Section-->
+
+      <!-- Update Section-->
       <div *ngIf="secciones == 3">
         <p>seccion3</p>
       </div>
+      <!-- End Update Section-->
+
+      <!-- Delete Section-->
       <div *ngIf="secciones == 4">
         <p>seccion4</p>
       </div>
+      <!-- End Delete Section-->
     </div>
   </div>
-  
+
   <div class="card mt-3">
     <div class="card-header section-header">Codigo SQL Generado</div>
     <div class="card-body">
