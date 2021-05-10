@@ -210,7 +210,29 @@
 
       <!-- Delete Section-->
       <div *ngIf="secciones == 4">
-        <p>seccion4</p>
+        <form [formGroup]="deleteForm" (ngSubmit)="onSubmit()">
+          <div class="row mt-3">
+            <div class="col-md-2 col-sm-4">
+              <h5>Delete Tabla:*</h5>
+            </div>
+            <div class="col-md-3 col-sm-8">
+              <input type="text" formControlName="Tabla" placeholder="Ejemplo: mytable"  (change)="onChangeDelete()"
+                class="form-control">
+            </div>
+            <div class="col-md-2 col-sm-4">
+              <h5>Where:</h5>
+            </div>
+            <div class="col-md-3 col-sm-8">
+              <input type="text" formControlName="Columnas" placeholder="Ejemplo: Condicion "  (change)="onChangeDelete()"
+                class="form-control">
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-ms-12 text-center">
+              <button type="submit" [disabled]="deleteForm.invalid" class="btn btn-primary">Generar Código</button>
+            </div>
+          </div>
+        </form>
       </div>
       <!-- End Delete Section-->
     </div>
