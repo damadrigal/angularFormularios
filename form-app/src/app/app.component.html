@@ -204,7 +204,29 @@
 
       <!-- Update Section-->
       <div *ngIf="secciones == 3">
-        <p>seccion3</p>
+        <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+          <div class="row mt-3">
+            <div class="col-md-2 col-sm-4">
+              <h5>Update Tabla:*</h5>
+            </div>
+            <div class="col-md-3 col-sm-8">
+              <input type="text" formControlName="Tabla" placeholder="Ejemplo: mytable" (change)="onChangeUpdate()"
+                class="form-control">
+            </div>
+            <div class="col-md-2 col-sm-4">
+              <h5>Column Names:</h5>
+            </div>
+            <div class="col-md-3 col-sm-8">
+              <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..." (change)="onChangeUpdate()"
+                class="form-control">
+            </div>
+          </div>
+          <div class="row mt-5">
+            <div class="col-ms-12 text-center">
+              <button type="submit" [disabled]="updateForm.invalid" class="btn btn-primary">Generar Código</button>
+            </div>
+          </div>
+        </form>
       </div>
       <!-- End Update Section-->
 
