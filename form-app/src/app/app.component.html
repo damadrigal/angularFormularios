@@ -34,7 +34,7 @@
               </div>
               <div class="col-md-3 col-sm-8">
                 <input type="text" formControlName="Columnas{{i}}" placeholder="Ejemplo: Columna1,Columna2,..."
-                  class="form-control" (change)="onChange(i)" (click)="onClick(i)">
+                  class="form-control" (change)="onChangeSelect(i)" (click)="onClickSelect">
               </div>
               <div class="col-md-1 col-sm-12">
                 <h5>From</h5>
@@ -44,7 +44,7 @@
               </div>
               <div class="col-md-2 col-sm-8">
                 <input type="text" formControlName="Tabla{{i}}" placeholder="Ejemplo: miTabla" class="form-control"
-                  (change)="onChange(i)" (click)="onClick(i)">
+                  (change)="onChangeSelect(i)" (click)="onClickSelect">
               </div>
               <div class="col-md-2 col-sm-12">
                 <div class="row">
@@ -60,89 +60,105 @@
             </div>
           </div>
           <div class="mt-3">
-            <button type="button" class="btn btn-success" (click)="showJoin=!showJoin">ADD JOIN</button>
+            <button type="button" class="btn btn-success" (click)="addElementJoin()">ADD JOIN</button>
           </div>
 
           <!-- Join Secction -->
-          <div class="container border m-3 pb-3" *ngIf="showJoin">
-            <div class="row mt-3">
-              <div class="col-md-2 col-sm-4">
-                <h5>Join Type:</h5>
-              </div>
-              <div class="col-md-3 col-sm-8">
-                <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{joinSeleccionado}}
-                  </button>
-                  <div class="dropdown-menu">
-                    <li *ngFor="let join of tiposJoin; let i = index" (click)="setJoin(i)">
-                      <a class="dropdown-item">
-                        {{join}}
-                      </a>
-                    </li>
+          <div *ngIf="showJoin">
+            <form [formGroup]="JoinForm">
+              <div class="row mt-3" *ngFor="let join of joins; let i = index">
+                  <div class="row mt-3">
+                    <div class="col-md-2 col-sm-4">
+                      <h5>Join Type {{i+1}}:</h5>
+                    </div>
+                    <div class="col-md-3 col-sm-8">
+                      <div class="form-group">
+                        <select class="custom-select" formControlName="TipoJoin{{i}}" (change)="onChangeJoin(i)">
+                          <option value="" disabled>-- Seleccione --</option>
+                          <option *ngFor="let tipoJoin of tiposJoin; let i = index" [value]="tipoJoin">{{tipoJoin}}</option>
+                       </select>
+                      </div> 
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-md-2 col-sm-4">
-                <h5>Tabla 1:</h5>
-              </div>
-              <div class="col-md-2 col-sm-8">
-                <input type="text" placeholder="Ejemplo: miTabla" class="form-control">
-              </div>
-              <div class="col-md-3 col-sm-8">
-                <input type="text" placeholder="Ejemplo: Columna1,Columna2,..." class="form-control">
-              </div>
-              <div class="col-md-1 col-sm-12">
-                <h5>ON</h5>
-              </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-md-2 col-sm-4">
-                <h5>Tabla 2:</h5>
-              </div>
-              <div class="col-md-2 col-sm-8">
-                <input type="text" placeholder="Ejemplo: miTabla" class="form-control">
-              </div>
-              <div class="col-md-2 col-sm-4">
-                <h5>Columna 2:</h5>
-              </div>
-              <div class="col-md-3 col-sm-8">
-                <input type="text" placeholder="Ejemplo: Columna1,Columna2,..." class="form-control">
-              </div>
-              <div class="col-md-2 col-sm-12">
-                <div class="row">
-                  <div class="col-md-6 col-sm-12">
-                    <button type="button" class="btn btn-success" [disabled]="selectForm.invalid">Agregar</button>
+                  <div class="row mt-3">
+                    <div class="col-md-2 col-sm-4">
+                      <h5>Tabla 1:</h5>
+                    </div>
+                    <div class="col-md-4 col-sm-8">
+                      <div class="form-group">
+                        <select class="form-control custom-select" #tabla formControlName="Tabla{{i}}1" (change)="selectJoinTable(i,true,$event)">
+                          <option value="" disabled>-- Seleccione --</option>
+                          <option *ngFor="let tabla of tablasSelect; let j = index" [value]="j">{{tabla.tabla}}</option>
+                       </select>
+                      </div> 
+                    </div>
+                    <div class="col-md-4 col-sm-8">
+                      <div class="form-group">
+                        <select class="form-control custom-select" formControlName="Columna{{i}}1" (change)="onChangeJoin(i)">
+                          <option value="" disabled>-- Seleccione --</option>
+                          <option *ngFor="let columna of tablasSelect[joinTablas[i].tabla1].columnas; let j = index"  [value]="columna">{{columna}}</option>
+                       </select>
+                      </div>                      
+                    </div>
+                    <div class="col-md-1 col-sm-12">
+                      <h5>ON</h5>
+                    </div>
                   </div>
-                  <div class="col-md-6 col-sm-12">
-                    <button type="button" class="btn btn-danger">Eliminar</button>
+                  <div class="row mt-3">
+                    <div class="col-md-2 col-sm-4">
+                      <h5>Tabla 2:</h5>
+                    </div>
+                    <div class="col-md-4 col-sm-8">
+                      <div class="form-group">
+                        <select class="form-control custom-select" formControlName="Tabla{{i}}2" (change)="selectJoinTable(i,false,$event)">
+                          <option value="" disabled>-- Seleccione --</option>
+                          <option *ngFor="let tabla of tablasSelect; let j = index" [value]="j">{{tabla.tabla}}</option>
+                       </select>
+                      </div> 
+                    </div>
+                    <div class="col-md-4 col-sm-8">
+                      <div class="form-group">
+                        <select class="form-control custom-select" formControlName="Columna{{i}}2" (change)="onChangeJoin(i)">
+                          <option value="" disabled>-- Seleccione --</option>
+                          <option *ngFor="let columna of tablasSelect[joinTablas[i].tabla2].columnas; let j = index" [value]="columna">{{columna}}</option>
+                       </select>
+                      </div>                      
+                    </div>
+                    <div class="col-md-2 col-sm-12">
+                      <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                          <button type="button" class="btn btn-success"  (click)="addElementJoin()">Agregar</button>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                          <button type="button" class="btn btn-danger" (click)="deleteElementJoin(i)">Eliminar</button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
               </div>
-            </div>
+              </form>
           </div>
+         
+
           <!-- End Join Secction -->
           <div class="mt-3">
             <button type="button" class="btn btn-success" (click)="showWhere=!showWhere">ADD WHERE</button>
           </div>
-           <!-- Where Secction -->
+          <!-- Where Secction -->
           <div class="container border m-3 pb-3" *ngIf="showWhere">
             <div class="row mt-3">
               <div class="col-md-2 col-sm-4">
                 <h5>Where</h5>
               </div>
               <div class="col-md-6 col-sm-8">
-                <input type="text" placeholder="Ejemplo: where clause" class="form-control">
+                <input type="text" (change)="onWhereChange($event)" placeholder="Ejemplo: where clause" class="form-control" [value]="whereValue">
               </div>
             </div>
           </div>
           <!-- End Where Secction -->
           <div class="row mt-5">
             <div class="col-ms-12 text-center">
-              <button type="submit" [disabled]="selectForm.invalid" class="btn btn-primary">Generar Código</button>
+              <button type="submit" [disabled]="desabilitarBoton" class="btn btn-primary">Generar Código</button>
             </div>
           </div>
         </form>
@@ -164,8 +180,8 @@
               <h5>Column Names:</h5>
             </div>
             <div class="col-md-3 col-sm-8">
-              <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..." (change)="onChangeInsert()"
-                class="form-control">
+              <input type="text" formControlName="Columnas" placeholder="Ejemplo: Columna1,Columna2,..."
+                (change)="onChangeInsert()" class="form-control">
             </div>
           </div>
           <div class="row mt-3">
@@ -173,8 +189,8 @@
               <h5>Values:*</h5>
             </div>
             <div class="col-md-3 col-sm-8">
-              <input type="text" formControlName="Valores" placeholder="Ejemplo: Valor1,Valor2,..." (change)="onChangeInsert()"
-                class="form-control">
+              <input type="text" formControlName="Valores" placeholder="Ejemplo: Valor1,Valor2,..."
+                (change)="onChangeInsert()" class="form-control">
             </div>
           </div>
           <div class="row mt-5">
