@@ -36,6 +36,8 @@ export class AppComponent implements OnInit {
   public joins: FormGroup[] = []; // lista de partes de los selects
   public selectForm: FormGroup = new FormGroup({}); //nombre asignado al formulario de select
   public insertForm: FormGroup = new FormGroup({}); //nombre asignado al formulario de insert
+  public updateForm: FormGroup = new FormGroup({}); //nombre asignado al formulario de update
+  public deleteForm: FormGroup = new FormGroup({}); //nombre asignado al formulario de delete
   public JoinForm: FormGroup = new FormGroup({}); //nombre asignado al formulario de insert
   public selectIndice = 0; //permite contar las s1tructuras agregadas dinamicamente
   public joinIndice = 0; //permite contar las s1tructuras agregadas dinamicamente de los join
@@ -57,6 +59,18 @@ export class AppComponent implements OnInit {
       ]),
       ['Tabla' + this.selectIndice]: new FormControl('', [Validators.required]),
     });
+    this.updateForm = new FormGroup({
+      ['Tabla']: new FormControl('', [Validators.required]),
+      ['Columnas']: new FormControl('', [
+        Validators.required,
+      ]),
+    });
+    this.deleteForm = new FormGroup({
+      ['Tabla']: new FormControl('', [Validators.required]),
+      ['Columnas']: new FormControl('', [
+        Validators.required,
+      ]),
+    });
     this.selects.push(this.selectForm);
 
     this.JoinForm = new FormGroup({
@@ -75,7 +89,8 @@ export class AppComponent implements OnInit {
       ['Columna' + this.joinIndice + '2']: new FormControl('', [
         Validators.required,
       ]),
-    });
+    }
+    );
 
     this.joins.push(this.JoinForm);
     this.joinTablas.push({tabla1:0,tabla2:0});
@@ -272,7 +287,36 @@ export class AppComponent implements OnInit {
         ]),
       });
   }
-
+  onChangeUpdate() {
+    if (
+      this.updateForm.value['Columnas'] != '' ||
+      this.updateForm.value['Tabla'] != ''
+    )
+      this.insertForm = this.formBuilder.group({
+        ['Tabla']: new FormControl(
+          this.updateForm.value['Tabla'],
+          [Validators.required]
+        ),
+        ['Columnas']: new FormControl(
+          this.updateForm.value['Columnas']
+        ),
+      });
+  }
+  onChangeDelete() {
+    if (
+      this.deleteForm.value['Columnas'] != '' ||
+      this.deleteForm.value['Tabla'] != ''
+    )
+      this.deleteForm = this.formBuilder.group({
+        ['Tabla']: new FormControl(
+          this.deleteForm.value['Tabla'],
+          [Validators.required]
+        ),
+        ['Columnas']: new FormControl(
+          this.deleteForm.value['Columnas']
+        ),
+      });
+  }
   onSubmit() {
     if (this.secciones == 1) {
       this.summitSelect();
@@ -286,8 +330,21 @@ export class AppComponent implements OnInit {
       this.resultado += ' values(' + this.insertForm.value['Valores'] + ')';
     } else if (this.secciones == 3) {
       this.resultado = 'Update ';
-    } else if (this.secciones == 3) {
+      this.resultado+= this.updateForm.value['Tabla'];
+      this.resultado+= ' set ';
+        if(this.updateForm.value['Columnas']!=''){
+          this.resultado+= ' ' +this.updateForm.value['Columnas']+' = "$'+this.updateForm.value['Columnas'] + '"';
+          const valor =  this.updateForm.value['Columnas'].toISOString().substring(1, 3);
+          this.resultado+=valor;
+        }
+      this.resultado+='\n';
+    } else if (this.secciones == 4) {
       this.resultado = 'Delete ';
+      this.resultado+= this.deleteForm.value['Tabla'];
+	    this.resultado+= ' Where ';
+      if(this.deleteForm.value['Columnas']!=''){
+        this.resultado += this.deleteForm.value['Columnas'];
+      }
     }
     this.resultado += ';';
   }
