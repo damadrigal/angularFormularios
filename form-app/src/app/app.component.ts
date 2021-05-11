@@ -23,9 +23,9 @@ export class AppComponent implements OnInit {
     'Delete',
   ];
   public tiposJoin: string[] = [
-    'Join',
-    'Left join',
     'Inner Join',
+    'Left join',
+    'Outer Join',
     'Right Join',
   ];
   public sentencia: string = this.sentencias[0];
